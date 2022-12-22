@@ -765,7 +765,7 @@ def LLVM_BrOp : LLVM_TerminatorOp<"br",
 }
 def LLVM_CondBrOp : LLVM_TerminatorOp<"cond_br",
     [AttrSizedOperandSegments, DeclareOpInterfaceMethods<BranchOpInterface>,
-     Pure]> {
+     DeclareOpInterfaceMethods<BranchWeightsInterface>, Pure]> {
   let arguments = (ins I1:$condition,
                    Variadic<LLVM_Type>:$trueDestOperands,
                    Variadic<LLVM_Type>:$falseDestOperands,
@@ -853,7 +853,7 @@ def LLVM_UnreachableOp : LLVM_TerminatorOp<"unreachable"> {
 
 def LLVM_SwitchOp : LLVM_TerminatorOp<"switch",
     [AttrSizedOperandSegments, DeclareOpInterfaceMethods<BranchOpInterface>,
-     Pure]> {
+     DeclareOpInterfaceMethods<BranchWeightsInterface>, Pure]> {
   let arguments = (ins
     AnyInteger:$value,
     Variadic<AnyType>:$defaultOperands,

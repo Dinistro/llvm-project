@@ -133,6 +133,10 @@ private:
     constantInsertionOp = nullptr;
   }
 
+  /// Sets the branch weight attribute for the imported operation `op` given
+  /// the original instruction `inst`. Asserts if the operation does not
+  /// implement the branch weights interface.
+  void setBranchWeightsAttr(llvm::Instruction *inst, Operation *op) const;
   /// Sets the fastmath flags attribute for the imported operation `op` given
   /// the original instruction `inst`. Asserts if the operation does not
   /// implement the fastmath interface.

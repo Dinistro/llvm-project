@@ -364,6 +364,13 @@ void ModuleImport::setFastmathFlagsAttr(llvm::Instruction *inst,
   iface->setAttr(iface.getFastmathAttrName(), attr);
 }
 
+void ModuleImport::setBranchWeightsAttr(llvm::Instruction *inst,
+                                        Operation *op) const {
+  auto iface = cast<BranchWeightsInterface>(op);
+  auto attr = iface.getBranchWeightsAttr();
+  auto name = iface.getBranchWeightsAttrName();
+}
+
 // We only need integers, floats, doubles, and vectors and tensors thereof for
 // attributes. Scalar and vector types are converted to the standard
 // equivalents. Array types are converted to ranked tensors; nested array types
@@ -851,9 +858,10 @@ LogicalResult ModuleImport::convertOperation(OpBuilder &odsBuilder,
       FailureOr<Value> condition = convertValue(brInst->getCondition());
       if (failed(condition))
         return failure();
-      builder.create<LLVM::CondBrOp>(loc, *condition, succBlocks.front(),
-                                     succBlockArgs.front(), succBlocks.back(),
-                                     succBlockArgs.back());
+      auto op = builder.create<LLVM::CondBrOp>(
+          loc, *condition, succBlocks.front(), succBlockArgs.front(),
+          succBlocks.back(), succBlockArgs.back());
+      setBranchWeightsAttr(inst, op);
     } else {
       builder.create<LLVM::BrOp>(loc, succBlockArgs.front(),
                                  succBlocks.front());

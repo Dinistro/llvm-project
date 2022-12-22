@@ -15,6 +15,28 @@
 
 include "mlir/IR/OpBase.td"
 
+def BranchWeightsInterface : OpInterface<"BranchWeightsInterface"> {
+  let description = [{
+    An interface for operations that can have branch weights information attached.
+  }];
+
+  let cppNamespace = "::mlir::LLVM";
+
+  let methods = [
+    InterfaceMethod<
+      /*desc=*/        "Returns a ElementsAttr attribute for the operation",
+      /*returnType=*/  "std::optional<ElementsAttr>",
+      /*methodName=*/  "getBranchWeightsAttr"
+    >,
+    InterfaceMethod<
+      /*desc=*/        [{Returns the name of the branch weights attribute
+                         for the operation}],
+      /*returnType=*/  "StringRef",
+      /*methodName=*/  "getBranchWeightsAttrName"
+    >
+  ];
+}
+
 def FastmathFlagsInterface : OpInterface<"FastmathFlagsInterface"> {
   let description = [{
     Access to op fastmath flags.
